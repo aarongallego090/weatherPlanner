@@ -6,8 +6,10 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(src)
 
 add_executable(weatherPlanner
+        src/ui.cpp
+        src/ui.h
         src/heap.cpp
         src/heap.h
         src/main.cpp
-        src/ui.cpp
-        src/ui.h)
+        projectData.csv
+        )

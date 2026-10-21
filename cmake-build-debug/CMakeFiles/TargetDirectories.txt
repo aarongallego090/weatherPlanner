@@ -1,0 +1,3 @@
+/Users/aarongallego/weatherPlanner/cmake-build-debug/CMakeFiles/weatherPlanner.dir
+/Users/aarongallego/weatherPlanner/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/aarongallego/weatherPlanner/cmake-build-debug/CMakeFiles/rebuild_cache.dir

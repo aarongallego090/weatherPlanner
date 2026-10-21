@@ -1,9 +1,18 @@
 #include "heap.h"
-#include <vector>
-#include <string>
 #include <algorithm>
 using namespace std;
 
+
+// Weather Node
+void weatherNode::calculateScore(int activity){
+    if(activity == 0){
+        if(22 - abs(this->temp) < 5) score += 2;
+        if(5 - abs(this->temp) < 5) score += 2;
+    }
+}
+
+
+// Private helpers
 void Heap::heapifyDown(int index){
     int size = heap.size();
     int min = index;
@@ -20,7 +29,6 @@ void Heap::heapifyDown(int index){
         heapifyDown(min);
     }
 }
-
 void Heap::heapifyUp(int index){
     if(index == 0) return;
 
@@ -32,12 +40,7 @@ void Heap::heapifyUp(int index){
     else return;
 }
 
-void Heap::buildHeap() {
-    for(int i = (int)heap.size() / 2 - 1; i >= 0; i--){
-        heapifyDown(i);
-    }
-}
-
+// Modifiers
 void Heap::pop(){
     if (heap.empty()) return;
 
@@ -48,12 +51,26 @@ void Heap::pop(){
         heapifyDown(0);
     }
 }
-
-void Heap::insert(int d, int hr, const string& l, int t, int w, int p, int c, double s){
-    Heap::weatherNode newNode = Heap::weatherNode(d, hr, l, t, w, p, c, s);
+void Heap::insert(int d, int hr, int l, double t, double w, double p, int c, double s){
+    weatherNode newNode = weatherNode(d, hr, l, t, w, p, c, s);
 
     heap.push_back(newNode);
 
     heapifyUp(heap.size() - 1);
 }
+void Heap::insert(weatherNode node){
+    heap.push_back(node);
 
+    heapifyUp(heap.size() - 1);
+}
+
+// Getters
+weatherNode Heap::top(){
+    return heap[0];
+}
+bool Heap::empty(){
+    return heap.empty();
+}
+int Heap::size(){
+    return heap.size();
+}
