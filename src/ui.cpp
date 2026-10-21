@@ -6,6 +6,8 @@
 using namespace std;
 
 void menu(Heap& weather, Heap& scores){
+    // First menu print
+
     cout << "---------- weatherPlanner ----------" << endl;
     cout << "1: Find the best hours for an activity" << endl;
     cout << "2: Compare speed: Heap vs. hash map" << endl;
@@ -15,16 +17,20 @@ void menu(Heap& weather, Heap& scores){
 
     while(x != 3){
         if(x == 1){
-            readDataHeap(weather);
+            // TODO: add hash table option
 
-            // IF METHOD == HEAP
+            // Read csv and build data structure. 0 = heap, 1 = hash table
+            readData(weather, 0);
+
+            // Get date, location, activity
             int date;
             int location;
             int activity;
-
             getDay(date, location, activity);
+
+            // Create day data structure, score them
             fillDayHeap(date, location, activity, weather, scores);
-            cout << "SCORE: " << scores.top().score << endl;
+            cout << "Score at top: " << scores.top().score << ", Temperature: " << scores.top().temp << endl;
         }
 
         cout << endl << "---------- weatherPlanner ----------" << endl;
@@ -36,7 +42,7 @@ void menu(Heap& weather, Heap& scores){
     }
 }
 
-void readDataHeap(Heap& weather){
+void readData(Heap& weather, int method){
     ifstream file("projectData.csv");
 
     if (!file.is_open()) {
@@ -94,7 +100,9 @@ void readDataHeap(Heap& weather){
         cloudCover = stoi(field);
 
         // Insert
-        weather.insert(date, hour, id, temp, wind, precipitation, cloudCover, score);
+        if(method == 0){
+            weather.insert(date, hour, id, temp, wind, precipitation, cloudCover, score);
+        }
     }
     file.close();
 }

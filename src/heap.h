@@ -46,6 +46,8 @@ public:
 
     // Getters
     weatherNode top();
+    weatherNode kLargest(int k);
     bool empty();
     int size();
+
 };

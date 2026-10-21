@@ -5,6 +5,7 @@ using namespace std;
 
 // Weather Node
 void weatherNode::calculateScore(int activity){
+    // Score for running
     if(activity == 0){
         if(22 - abs(this->temp) < 5) score += 2;
         if(5 - abs(this->temp) < 5) score += 2;
@@ -67,6 +68,9 @@ void Heap::insert(weatherNode node){
 // Getters
 weatherNode Heap::top(){
     return heap[0];
+}
+weatherNode Heap::kLargest(int k){
+    //Not optimal, but only dealing with 12 hours
 }
 bool Heap::empty(){
     return heap.empty();
