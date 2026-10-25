@@ -12,4 +12,6 @@ add_executable(weatherPlanner
         src/heap.h
         src/main.cpp
         projectData.csv
-        )
+        src/hashtable.cpp
+        src/hashtable.h
+)
