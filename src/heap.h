@@ -43,10 +43,11 @@ public:
     void pop();
     void insert(int d, int hr, int l, double t, double w, double p, int c, double s);
     void insert(weatherNode node);
+    void clear();
 
     // Getters
     weatherNode top();
-    weatherNode kLargest(int k);
+    Heap kLargest(int k);
     bool empty();
     int size();
 
