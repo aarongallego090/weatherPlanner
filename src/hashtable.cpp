@@ -8,10 +8,14 @@ HashTable::HashTable(int startSize) {
     numItems = 0;
 }
 
-// Hash function: converts score into hash code -> reduces it to get bucket index
+// Helper function - Hash code: turns score into a whole number
+int HashTable::getKey(double score) {
+    return static_cast<int>(round(score * 10));
+}
+
+// Hash function: gets key -> reduces it to get bucket index
 int HashTable::hashFunction(double score) {
-    // hash code
-    int key = static_cast<int>(round(score * 10));
+    int key = getKey(score);
     // reduce
     int index = key % static_cast<int>(table.size());
     return index;
@@ -29,13 +33,18 @@ void HashTable::insert(weatherNode node) {
     }
 }
 
-// Search:
+// Search: returns all nodes with score, empty is none
 vector<weatherNode> HashTable::search(double score) {
-    //find the hash of the value
-    // reduce the hash to get an index
-    // check if value is not at index -> return false
-    // otherwise, search based on collision resolution strategy
-    return vector<weatherNode>();
+    vector<weatherNode> result;
+    int key = getKey(score);
+    // Hashes score to find bucket, then checks each node in that bucket
+    int index = hashFunction(score);
+    for (const auto& node : table[index]) {
+        if (key == getKey(node.score)) {
+            result.push_back(node);
+        }
+    }
+    return result;
 }
 
 // K largest:

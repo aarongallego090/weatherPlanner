@@ -10,6 +10,7 @@ private:
     int numItems = 0;
 
     int hashFunction(double score);
+    int getKey(double score);
     void rehash();
 
 public:
