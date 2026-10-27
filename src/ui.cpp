@@ -107,7 +107,7 @@ void readData(Heap& weather, int method){
         wind = stod(field);
 
         getline(stream, field, ',');
-        precipitation = stoi(field);
+        precipitation = stod(field);
 
         getline(stream, field, ',');
         cloudCover = stoi(field);
