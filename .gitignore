@@ -1,0 +1,7 @@
+# CLion / CMake build files
+cmake-build-*/
+.idea/
+
+# Compiled program (Mac)
+main
+main.dSYM/

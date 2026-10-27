@@ -1,1 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/c++ -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/weatherPlanner.dir/src/ui.cpp.o CMakeFiles/weatherPlanner.dir/src/heap.cpp.o CMakeFiles/weatherPlanner.dir/src/main.cpp.o -o weatherPlanner 
