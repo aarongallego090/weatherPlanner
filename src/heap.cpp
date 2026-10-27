@@ -4,37 +4,76 @@ using namespace std;
 
 
 // Weather Node
+int rangeScore(double value, double idealLow, double idealHigh, int maxPoints) {
+    if (value >= idealLow && value <= idealHigh)
+        return maxPoints;
+
+    double distance;
+
+    if (value < idealLow)
+        distance = idealLow - value;
+    else
+        distance = value - idealHigh;
+
+    return max(0, (int)(maxPoints - distance));
+}
 void weatherNode::calculateScore(int activity){
     // Score for running
     if(activity == 0){
-        if(22 - abs(this->temp) < 5) score += 2;
-        if(5 - abs(this->temp) < 5) score += 2;
+        score += rangeScore(temp, 18, 26, 5);
+        score += rangeScore(wind, 0, 10, 2);
+        if(precip == 0)
+            score += 2;
+    }
+    // Score for tanning
+    if(activity == 1){
+        score += rangeScore(temp, 25, 32, 2);
+        if(precip == 0)
+            score += 5;
+        score += rangeScore(cloudCover, 0, 25, 3);
+    }
+    // Score for swimming
+    if(activity == 2){
+        score += rangeScore(temp, 25, 37, 3);
+        if(precip == 0)
+            score += 2;
+        score += rangeScore(cloudCover, 0, 25, 4);
+    }
+    // Score for picnic
+    if(activity == 3){
+        score += rangeScore(temp, 21, 29, 3);
+        score += rangeScore(wind, 0, 5, 4);
+        if(precip == 0)
+            score += 2;
+        score += rangeScore(cloudCover, 0, 50, 1);
     }
 }
+
 
 
 // Private helpers
 void Heap::heapifyDown(int index){
     int size = heap.size();
-    int min = index;
+    int max = index;
 
     int lChild = index*2+1;
     int rChild = index*2+2;
 
-    if(lChild < size && heap[lChild] < heap[min]) min = lChild;
-    if(rChild < size && heap[rChild] < heap[min]) min = rChild;
+    if(lChild < size && heap[lChild] > heap[max]) max = lChild;
+    if(rChild < size && heap[rChild] > heap[max]) max = rChild;
 
-    if(min == index) return;
+    if(max == index) return;
+
     else{
-        swap(heap[index], heap[min]);
-        heapifyDown(min);
+        swap(heap[index], heap[max]);
+        heapifyDown(max);
     }
 }
 void Heap::heapifyUp(int index){
     if(index == 0) return;
 
     int parent = (index-1)/2;
-    if(heap[index] < heap[parent]){
+    if(heap[index] > heap[parent]){
         swap(heap[parent], heap[index]);
         heapifyUp(parent);
     }
@@ -64,14 +103,30 @@ void Heap::insert(weatherNode node){
 
     heapifyUp(heap.size() - 1);
 }
+void Heap::clear() {
+    heap.clear();
+}
 
 // Getters
 weatherNode Heap::top(){
     return heap[0];
 }
-weatherNode Heap::kLargest(int k){
-    //Not optimal, but only dealing with 12 hours
+Heap Heap::kLargest(int k){
+    Heap kHeap;
+
+    for(int i = 0; i < heap.size(); i++){
+        if(kHeap.size() < k){
+            kHeap.insert(heap[i]);
+        }
+        else if(heap[i].score > kHeap.top().score){
+            kHeap.pop();
+            kHeap.insert(heap[i]);
+        }
+    }
+
+    return kHeap;
 }
+
 bool Heap::empty(){
     return heap.empty();
 }

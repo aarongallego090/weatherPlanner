@@ -6,8 +6,10 @@
 using namespace std;
 
 void menu(Heap& weather, Heap& scores){
-    // First menu print
+    // Read csv and build data structure. 0 = heap, 1 = hash table
+    readData(weather, 0);
 
+    // First menu print
     cout << "---------- weatherPlanner ----------" << endl;
     cout << "1: Find the best hours for an activity" << endl;
     cout << "2: Compare speed: Heap vs. hash map" << endl;
@@ -19,18 +21,28 @@ void menu(Heap& weather, Heap& scores){
         if(x == 1){
             // TODO: add hash table option
 
-            // Read csv and build data structure. 0 = heap, 1 = hash table
-            readData(weather, 0);
-
-            // Get date, location, activity
+            // Get date, location, activity, fill heap with scores
             int date;
             int location;
             int activity;
             getDay(date, location, activity);
-
-            // Create day data structure, score them
             fillDayHeap(date, location, activity, weather, scores);
-            cout << "Score at top: " << scores.top().score << ", Temperature: " << scores.top().temp << endl;
+
+
+            // PRINT RESULTS
+            cout << endl << "Best 3 Hours for activity:" << endl;
+            int k = 3;
+            scores = scores.kLargest(k);
+
+            for(int i = 0; i < k; i++){
+                cout << i + 1 << ": " << scores.top().hour << ":00, Score: ";
+                cout << scores.top().score << endl;
+//                for(int j = 0; j < scores.top().score; j++){
+//                       cout << "*";
+//                    }
+//                cout << endl;
+                scores.pop();
+            }
         }
 
         cout << endl << "---------- weatherPlanner ----------" << endl;
@@ -42,6 +54,7 @@ void menu(Heap& weather, Heap& scores){
     }
 }
 
+// Modify to add heap implementation
 void readData(Heap& weather, int method){
     ifstream file("projectData.csv");
 
@@ -106,7 +119,6 @@ void readData(Heap& weather, int method){
     }
     file.close();
 }
-
 void getDay(int& date, int& location, int& activity){
     cout << "Enter Date: YYYYMMDD" << endl;
     cin >> date;
@@ -122,15 +134,17 @@ void getDay(int& date, int& location, int& activity){
     cin >> activity;
 }
 
+// Fills scores heap for day of weather
 bool fillDayHeap(int& date, int& location, int& activity, Heap& weather, Heap& scores){
+    scores.clear();
     Heap temp = weather;
 
-    while (!temp.empty() && temp.top().date <= date) {
-        auto node = temp.top();
+    while (!temp.empty()) {
+        weatherNode node = temp.top();
         temp.pop();
 
         if (node.date == date && node.loc == location) {
-            // HELP
+            node.score = 0;
             node.calculateScore(activity);
             scores.insert(node);
         }
