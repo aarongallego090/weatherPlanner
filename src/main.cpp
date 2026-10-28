@@ -5,7 +5,11 @@ using namespace std;
 
 int main(){
    Heap weather;
-   Heap scores;
+
+   bool scoreHeap = true;
+   Heap scores(scoreHeap);
+
+
    menu(weather, scores);
 
   cout << "Ending Program" << endl;

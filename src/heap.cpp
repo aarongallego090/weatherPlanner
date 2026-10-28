@@ -2,7 +2,6 @@
 #include <algorithm>
 using namespace std;
 
-
 // Weather Node
 int rangeScore(double value, double idealLow, double idealHigh, int maxPoints) {
     if (value >= idealLow && value <= idealHigh)
@@ -48,7 +47,9 @@ void weatherNode::calculateScore(int activity){
         score += rangeScore(cloudCover, 0, 50, 1);
     }
 }
-
+void weatherNode::setScoreCompare(){
+    compareScore = true;
+}
 
 
 // Private helpers
@@ -99,6 +100,7 @@ void Heap::insert(int d, int hr, int l, double t, double w, double p, int c, dou
     heapifyUp(heap.size() - 1);
 }
 void Heap::insert(weatherNode node){
+    if(compareScore) node.setScoreCompare();
     heap.push_back(node);
 
     heapifyUp(heap.size() - 1);
@@ -112,20 +114,16 @@ weatherNode Heap::top(){
     return heap[0];
 }
 Heap Heap::kLargest(int k){
-    Heap kHeap;
+    Heap temp = *this;
+    Heap kHeap(true);
 
-    for(int i = 0; i < heap.size(); i++){
-        if(kHeap.size() < k){
-            kHeap.insert(heap[i]);
-        }
-        else if(heap[i].score > kHeap.top().score){
-            kHeap.pop();
-            kHeap.insert(heap[i]);
-        }
+    for (int i = 0; i < k && !temp.empty(); i++) {
+        kHeap.insert(temp.top());
+        temp.pop();
     }
 
     return kHeap;
-}
+} // Not needed?
 
 bool Heap::empty(){
     return heap.empty();

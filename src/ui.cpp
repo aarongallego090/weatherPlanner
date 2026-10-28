@@ -32,15 +32,11 @@ void menu(Heap& weather, Heap& scores){
             // PRINT RESULTS
             cout << endl << "Best 3 Hours for activity:" << endl;
             int k = 3;
-            scores = scores.kLargest(k);
 
             for(int i = 0; i < k; i++){
+                if(scores.empty()) break;
                 cout << i + 1 << ": " << scores.top().hour << ":00, Score: ";
                 cout << scores.top().score << endl;
-//                for(int j = 0; j < scores.top().score; j++){
-//                       cout << "*";
-//                    }
-//                cout << endl;
                 scores.pop();
             }
         }
@@ -143,7 +139,7 @@ bool fillDayHeap(int& date, int& location, int& activity, Heap& weather, Heap& s
         weatherNode node = temp.top();
         temp.pop();
 
-        if (node.date == date && node.loc == location) {
+        if (node.date == date && node.loc == location && (node.hour >=6 && node.hour <= 21)) {
             node.score = 0;
             node.calculateScore(activity);
             scores.insert(node);
