@@ -5,11 +5,9 @@ using namespace std;
 
 int main(){
    Heap weather;
+   Heap scores(true);
 
-   bool scoreHeap = true;
-   Heap scores(scoreHeap);
-
-
+   //Pass in map when implemented
    menu(weather, scores);
 
   cout << "Ending Program" << endl;

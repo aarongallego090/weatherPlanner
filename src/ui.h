@@ -1,6 +1,7 @@
 #pragma once
 #include "heap.h"
 
+//Modify this to take in hash maps
 void menu(Heap& weather, Heap& scores);
 
 //Heap
