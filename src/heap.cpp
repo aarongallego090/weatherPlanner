@@ -4,11 +4,13 @@ using namespace std;
 
 // Weather Node
 int rangeScore(double value, double idealLow, double idealHigh, int maxPoints) {
+    // Returns max points if within range
     if (value >= idealLow && value <= idealHigh)
         return maxPoints;
 
     double distance;
 
+    // Subtracts from max points if above or below
     if (value < idealLow)
         distance = idealLow - value;
     else
@@ -70,6 +72,7 @@ void Heap::heapifyDown(int index){
         heapifyDown(max);
     }
 }
+
 void Heap::heapifyUp(int index){
     if(index == 0) return;
 
@@ -105,6 +108,7 @@ void Heap::insert(weatherNode node){
 
     heapifyUp(heap.size() - 1);
 }
+
 void Heap::clear() {
     heap.clear();
 }
@@ -113,6 +117,8 @@ void Heap::clear() {
 weatherNode Heap::top(){
     return heap[0];
 }
+
+// Returns k largest elts, not functional/needed
 Heap Heap::kLargest(int k){
     Heap temp = *this;
     Heap kHeap(true);

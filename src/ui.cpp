@@ -115,6 +115,7 @@ void readData(Heap& weather, int method){
     }
     file.close();
 }
+
 void getDay(int& date, int& location, int& activity){
     cout << "Enter Date: YYYYMMDD" << endl;
     cin >> date;

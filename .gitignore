@@ -5,3 +5,8 @@ cmake-build-*/
 # Compiled program (Mac)
 main
 main.dSYM/
+
+echo "weatherPlanner" >> .gitignore
+git add .gitignore
+git commit -m "Ignore compiled binary"
+git push
