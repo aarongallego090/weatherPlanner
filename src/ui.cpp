@@ -34,7 +34,7 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores){
                 fillHashTable(dayNodes, hashScores);
 
                 // PRINT RESULTS
-                cout << endl << "Best 3 Hours for activity:" << endl;
+                cout << endl << "Best 3 Hours for activity (Heap):" << endl;
                 int k = 3;
 
                 for(int i = 0; i < k; i++){
@@ -42,6 +42,13 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores){
                     cout << i + 1 << ": " << scores.top().hour << ":00, Score: ";
                     cout << scores.top().score << endl;
                     scores.pop();
+                }
+
+                cout << endl << "Best 3 Hours for activity (Hash Table):" << endl;
+                vector<weatherNode> hashResults = hashScores.kLargest(k);
+                for(int i = 0; i < hashResults.size(); i++){
+                    cout << i + 1 << ": " << hashResults[i].hour << ":00, Score: ";
+                    cout << hashResults[i].score << endl;
                 }
             }
         }
