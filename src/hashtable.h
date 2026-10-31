@@ -18,6 +18,7 @@ public:
     void insert(weatherNode node);
     vector<weatherNode> search(double score);
     vector<weatherNode> kLargest(int k);
+    void clear();
 };
 
 

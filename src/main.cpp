@@ -4,11 +4,10 @@
 using namespace std;
 
 int main(){
-   Heap weather;
-   Heap scores(true);
+    Heap weather;
+    Heap scores(true);
+    HashTable hashScores;
 
-   //Pass in map when implemented
-   menu(weather, scores);
-
-  cout << "Ending Program" << endl;
+    menu(weather, scores, hashScores);
+    cout << "Ending Program" << endl;
 }

@@ -89,3 +89,11 @@ void HashTable::rehash() {
         }
     }
 }
+
+
+// Clear: removes all nodes and resets the table to its starting size
+void HashTable::clear() {
+    table.clear();
+    table.resize(11);
+    numItems = 0;
+}
