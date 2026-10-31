@@ -13,7 +13,7 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores){
     // First menu print
     cout << "---------- weatherPlanner ----------" << endl;
     cout << "1: Find the best hours for an activity" << endl;
-    cout << "2: Compare speed: Heap vs. hash map" << endl;
+    cout << "2: Compare speed: Heap vs. Hash Table" << endl;
     cout << "3: Exit" << endl;
     int x = 0;
     cin >> x;
@@ -50,12 +50,14 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores){
                     cout << i + 1 << ": " << hashResults[i].hour << ":00, Score: ";
                     cout << hashResults[i].score << endl;
                 }
+
+                cout << endl << "Based on past weather for this date." << endl;
             }
         }
 
         cout << endl << "---------- weatherPlanner ----------" << endl;
         cout << "1: Find the best hours for an activity" << endl;
-        cout << "2: Compare speed: Heap vs. hash map" << endl;
+        cout << "2: Compare speed: Heap vs. Hash Table" << endl;
         cout << "3: Exit" << endl;
 
         cin >> x;
@@ -133,13 +135,12 @@ void getDay(int& date, int& location, int& activity){
     cin >> date;
 
     cout << "Choose a city:" << endl;
-    cout << "0: Gainesville, 1: Orlando, 2: Tampa, 3: Miami,"
-            "4: NYC, 5: DC, 6: Boston, 7: Chicago, "
-            "8: Houston, 9: Denver, 10: San Francisco, 11: Los Angeles" << endl;
+    cout << "0: Gainesville, 1: Orlando, 2: Tampa, 3: Miami, 4: NYC, 5: DC, 6: Boston" << endl <<
+            "7: Chicago, 8: Houston, 9: Denver, 10: San Francisco, 11: Los Angeles" << endl;
     cin >> location;
 
     cout << "Choose an activity:" << endl;
-    cout << "0: Running, 1: Tanning, 2: Swimming. 3: Picnic" << endl;
+    cout << "0: Running, 1: Tanning, 2: Swimming, 3: Picnic" << endl;
     cin >> activity;
 }
 
@@ -152,7 +153,7 @@ vector<weatherNode> getDayNodes(int date, int location, int activity, Heap &weat
         weatherNode node = temp.top();
         temp.pop();
 
-        if (node.date == date && node.loc == location && (node.hour >=6 && node.hour <= 21)) {
+        if ((node.date % 10000 == date % 10000) && node.loc == location && (node.hour >=6 && node.hour <= 21)) {
             node.score = 0;
             node.calculateScore(activity);
             result.push_back(node);
