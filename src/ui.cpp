@@ -7,7 +7,7 @@
 using namespace std;
 
 void menu(Heap& weather, Heap& scores, HashTable& hashScores){
-    // Read csv and build data structure. 0 = heap, 1 = hash table
+    // Read the CSV into the weather heap (105,408 rows)
     readData(weather, 0);
 
     // First menu print
@@ -24,7 +24,8 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores){
             int date;
             int location;
             int activity;
-            getDay(date, location, activity);
+            int k;
+            getDay(date, location, activity, k);
             vector <weatherNode> dayNodes = getDayNodes(date, location, activity, weather);
             if(dayNodes.empty()){
                 cout << "Weather Records Not Found" << endl;
@@ -34,8 +35,7 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores){
                 fillHashTable(dayNodes, hashScores);
 
                 // PRINT RESULTS
-                cout << endl << "Best 3 Hours for activity (Heap):" << endl;
-                int k = 3;
+                cout << endl << "Best " << k << " Hours for activity (Heap):" << endl;
 
                 for(int i = 0; i < k; i++){
                     if(scores.empty()) break;
@@ -44,7 +44,7 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores){
                     scores.pop();
                 }
 
-                cout << endl << "Best 3 Hours for activity (Hash Table):" << endl;
+                cout << endl << "Best " << k << " Hours for activity (Hash Table):" << endl;
                 vector<weatherNode> hashResults = hashScores.kLargest(k);
                 for(int i = 0; i < hashResults.size(); i++){
                     cout << i + 1 << ": " << hashResults[i].hour << ":00, Score: ";
@@ -64,7 +64,7 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores){
     }
 }
 
-// Modify to add heap implementation
+// Reads every row of the CSV into weather heap
 void readData(Heap& weather, int method){
     ifstream file("projectData.csv");
 
@@ -130,7 +130,7 @@ void readData(Heap& weather, int method){
     file.close();
 }
 
-void getDay(int& date, int& location, int& activity){
+void getDay(int& date, int& location, int& activity, int& k){
     cout << "Enter Date: YYYYMMDD" << endl;
     cin >> date;
 
@@ -142,6 +142,13 @@ void getDay(int& date, int& location, int& activity){
     cout << "Choose an activity:" << endl;
     cout << "0: Running, 1: Tanning, 2: Swimming, 3: Picnic" << endl;
     cin >> activity;
+
+    cout << "How many hours to show? (1-16)" << endl;
+    cin >> k;
+    while (k<1 || k>16) {
+        cout << "Please enter a number from 1 to 16." << endl;
+        cin >> k;
+    }
 }
 
 // Finds the hours for the chosen date and city, scores them for the activity
