@@ -10,6 +10,13 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores){
     // Read the CSV into the weather heap (105,408 rows)
     readData(weather, 0);
 
+    // Names for printing
+    string cities[] = {"Gainesville", "Orlando", "Tampa", "Miami", "NYC", "DC",
+                       "Boston", "Chicago", "Houston", "Denver", "San Francisco", "Los Angeles"};
+    string activities[] = {"Running", "Tanning", "Swimming", "Picnic"};
+    string months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
     // First menu print
     cout << "---------- weatherPlanner ----------" << endl;
     cout << "1: Find the best hours for an activity" << endl;
@@ -34,21 +41,25 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores){
                 fillHeap(dayNodes, scores);
                 fillHashTable(dayNodes, hashScores);
 
+                // Header
+                int month = (date / 100) % 100;
+                int day = date % 100;
+                cout << endl << activities[activity] << " in " << cities[location]
+                     << " on " << months[month - 1] << " " << day << endl;
+
                 // PRINT RESULTS
                 cout << endl << "Best " << k << " Hours for activity (Heap):" << endl;
 
                 for(int i = 0; i < k; i++){
                     if(scores.empty()) break;
-                    cout << i + 1 << ": " << scores.top().hour << ":00, Score: ";
-                    cout << scores.top().score << endl;
+                    printResult(i + 1, scores.top());
                     scores.pop();
                 }
 
                 cout << endl << "Best " << k << " Hours for activity (Hash Table):" << endl;
                 vector<weatherNode> hashResults = hashScores.kLargest(k);
                 for(int i = 0; i < hashResults.size(); i++){
-                    cout << i + 1 << ": " << hashResults[i].hour << ":00, Score: ";
-                    cout << hashResults[i].score << endl;
+                    printResult(i + 1, hashResults[i]);
                 }
 
                 cout << endl << "Based on past weather for this date." << endl;
@@ -184,4 +195,17 @@ void fillHashTable(const vector<weatherNode>& dayNodes, HashTable& hashScores) {
     for (const auto& node : dayNodes) {
         hashScores.insert(node);
     }
+}
+
+// Prints one result line (rank, hour, score and the weather for that hour)
+void printResult(int rank, const weatherNode& node) {
+    cout << rank << ": " << node.hour << ":00, Score: " << node.score;
+    cout << "  (" << node.temp << " C, wind " << node.wind << " km/h, clouds " << node.cloudCover << "%, ";
+    if (node.precip == 0) {
+        cout << "dry)";
+    }
+    else {
+        cout << "rain)";
+    }
+    cout << endl;
 }
