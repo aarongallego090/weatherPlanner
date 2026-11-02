@@ -1,56 +1,81 @@
 #include "ui.h"
 #include "heap.h"
+#include "hashtable.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 using namespace std;
 
-void menu(Heap& weather, Heap& scores){
-    // Read csv and build data structure. 0 = heap, 1 = hash table
+void menu(Heap& weather, Heap& scores, HashTable& hashScores){
+    // Read the CSV into the weather heap (105,408 rows)
     readData(weather, 0);
+
+    // Names for printing
+    string cities[] = {"Gainesville", "Orlando", "Tampa", "Miami", "NYC", "DC",
+                       "Boston", "Chicago", "Houston", "Denver", "San Francisco", "Los Angeles"};
+    string activities[] = {"Running", "Tanning", "Swimming", "Picnic"};
+    string months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
     // First menu print
     cout << "---------- weatherPlanner ----------" << endl;
     cout << "1: Find the best hours for an activity" << endl;
-    cout << "2: Compare speed: Heap vs. hash map" << endl;
+    cout << "2: Compare speed: Heap vs. Hash Table" << endl;
     cout << "3: Exit" << endl;
     int x = 0;
     cin >> x;
 
     while(x != 3){
         if(x == 1){
-            // TODO: add hash table option
-
-            // Get date, location, activity, fill heap with scores
+            // Get date, location, activity, fill heap and hash table with scores
             int date;
             int location;
             int activity;
-            getDay(date, location, activity);
-            fillDayHeap(date, location, activity, weather, scores);
+            int k;
+            getDay(date, location, activity, k);
+            vector <weatherNode> dayNodes = getDayNodes(date, location, activity, weather);
+            if(dayNodes.empty()){
+                cout << "Weather Records Not Found" << endl;
+            }
+            else {
+                fillHeap(dayNodes, scores);
+                fillHashTable(dayNodes, hashScores);
 
+                // Header
+                int month = (date / 100) % 100;
+                int day = date % 100;
+                cout << endl << activities[activity] << " in " << cities[location]
+                     << " on " << months[month - 1] << " " << day << endl;
 
-            // PRINT RESULTS
-            cout << endl << "Best 3 Hours for activity:" << endl;
-            int k = 3;
+                // PRINT RESULTS
+                cout << endl << "Best " << k << " Hours for activity (Heap):" << endl;
 
-            for(int i = 0; i < k; i++){
-                if(scores.empty()) break;
-                cout << i + 1 << ": " << scores.top().hour << ":00, Score: ";
-                cout << scores.top().score << endl;
-                scores.pop();
+                for(int i = 0; i < k; i++){
+                    if(scores.empty()) break;
+                    printResult(i + 1, scores.top());
+                    scores.pop();
+                }
+
+                cout << endl << "Best " << k << " Hours for activity (Hash Table):" << endl;
+                vector<weatherNode> hashResults = hashScores.kLargest(k);
+                for(int i = 0; i < hashResults.size(); i++){
+                    printResult(i + 1, hashResults[i]);
+                }
+
+                cout << endl << "Based on past weather for this date." << endl;
             }
         }
 
         cout << endl << "---------- weatherPlanner ----------" << endl;
         cout << "1: Find the best hours for an activity" << endl;
-        cout << "2: Compare speed: Heap vs. hash map" << endl;
+        cout << "2: Compare speed: Heap vs. Hash Table" << endl;
         cout << "3: Exit" << endl;
 
         cin >> x;
     }
 }
 
-// Modify to add heap implementation
+// Reads every row of the CSV into weather heap
 void readData(Heap& weather, int method){
     ifstream file("projectData.csv");
 
@@ -116,40 +141,71 @@ void readData(Heap& weather, int method){
     file.close();
 }
 
-void getDay(int& date, int& location, int& activity){
+void getDay(int& date, int& location, int& activity, int& k){
     cout << "Enter Date: YYYYMMDD" << endl;
     cin >> date;
 
     cout << "Choose a city:" << endl;
-    cout << "0: Gainesville, 1: Orlando, 2: Tampa, 3: Miami,"
-            "4: NYC, 5: DC, 6: Boston, 7: Chicago, "
-            "8: Houston, 9: Denver, 10: San Francisco, 11: Los Angeles" << endl;
+    cout << "0: Gainesville, 1: Orlando, 2: Tampa, 3: Miami, 4: NYC, 5: DC, 6: Boston" << endl <<
+            "7: Chicago, 8: Houston, 9: Denver, 10: San Francisco, 11: Los Angeles" << endl;
     cin >> location;
 
     cout << "Choose an activity:" << endl;
-    cout << "0: Running, 1: Tanning, 2: Swimming. 3: Picnic" << endl;
+    cout << "0: Running, 1: Tanning, 2: Swimming, 3: Picnic" << endl;
     cin >> activity;
+
+    cout << "How many hours to show? (1-16)" << endl;
+    cin >> k;
+    while (k<1 || k>16) {
+        cout << "Please enter a number from 1 to 16." << endl;
+        cin >> k;
+    }
 }
 
-// Fills scores heap for day of weather
-bool fillDayHeap(int& date, int& location, int& activity, Heap& weather, Heap& scores){
-    scores.clear();
+// Finds the hours for the chosen date and city, scores them for the activity
+vector<weatherNode> getDayNodes(int date, int location, int activity, Heap &weather) {
     Heap temp = weather;
+    vector<weatherNode> result;
 
     while (!temp.empty()) {
         weatherNode node = temp.top();
         temp.pop();
 
-        if (node.date == date && node.loc == location && (node.hour >=6 && node.hour <= 21)) {
+        if ((node.date % 10000 == date % 10000) && node.loc == location && (node.hour >=6 && node.hour <= 21)) {
             node.score = 0;
             node.calculateScore(activity);
-            scores.insert(node);
+            result.push_back(node);
         }
     }
+    return result;
+}
 
-    if(scores.empty()){
-        cout << "Weather Records Not Found" << endl;
-        return false;
+
+// Fills heap: clears, then inserts each node
+void fillHeap(const vector<weatherNode>& dayNodes, Heap& scores){
+    scores.clear();
+    for (const auto& node : dayNodes) {
+        scores.insert(node);
     }
-    return true;
+}
+
+// Fills hash table: clears, then inserts each node
+void fillHashTable(const vector<weatherNode>& dayNodes, HashTable& hashScores) {
+    hashScores.clear();
+    for (const auto& node : dayNodes) {
+        hashScores.insert(node);
+    }
+}
+
+// Prints one result line (rank, hour, score and the weather for that hour)
+void printResult(int rank, const weatherNode& node) {
+    cout << rank << ": " << node.hour << ":00, Score: " << node.score;
+    cout << "  (" << node.temp << " C, wind " << node.wind << " km/h, clouds " << node.cloudCover << "%, ";
+    if (node.precip == 0) {
+        cout << "dry)";
+    }
+    else {
+        cout << "rain)";
+    }
+    cout << endl;
 }
