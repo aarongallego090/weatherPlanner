@@ -24,7 +24,7 @@ int HashTable::hashFunction(double score) {
 
 
 // Insert: adds the node using separate chaining, rehashed if the max load factor (0.8) is reached
-void HashTable::insert(weatherNode node) {
+void HashTable::insert(const weatherNode& node) {
     int index = hashFunction(node.score);
     // insert value at index, increment num of items
     table[index].push_back(node);
@@ -58,17 +58,19 @@ vector<weatherNode> HashTable::kLargest(int k) {
         return result;
     }
     // Walks the keys from the highest score (100) down
-    // Using search to get nodes with each score
+    // Looks directly in each score's bucket, no copy
     double score = 0;
     for (int key = 100; key >= 0; key--) {
         score = key / 10.0;
-        vector<weatherNode> found = search(score);
-        // Get the first k nodes found or fewer
-        for (const auto& node : found) {
-            result.push_back(node);
-            k--;
-            if (k == 0) {
-                return result;
+        int index = hashFunction(score);
+        // Check each node in bucket, add if it has the score
+        for (const auto& node : table[index]) {
+            if (key == getKey(node.score)) {
+                result.push_back(node);
+                k--;
+                if (k == 0) {
+                    return result;
+                }
             }
         }
     }
@@ -78,8 +80,9 @@ vector<weatherNode> HashTable::kLargest(int k) {
 
 // Rehash: doubles the table size when the max load factor is reached, and re-inserts every node
 void HashTable::rehash() {
-    vector<vector<weatherNode>> oldTable = table;
     int newSize = static_cast<int>(table.size()) * 2;
+    // move() gives all buckets to oldTable without making a copy, faster
+    vector<vector<weatherNode>> oldTable = move(table);
     table.clear();
     table.resize(newSize);
     numItems = 0;
