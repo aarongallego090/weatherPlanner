@@ -171,7 +171,7 @@ vector<weatherNode> getDayNodes(int date, int location, int activity, Heap &weat
         weatherNode node = temp.top();
         temp.pop();
 
-        if ((node.date % 10000 == date % 10000) && node.loc == location && (node.hour >=6 && node.hour <= 21)) {
+        if ((node.date % 10000 == date % 10000) && node.loc == location && (node.hour >=6 && node.hour <= 9)) {
             node.score = 0;
             node.calculateScore(activity);
             result.push_back(node);
