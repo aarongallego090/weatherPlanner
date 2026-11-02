@@ -24,7 +24,7 @@ int HashTable::hashFunction(double score) {
 
 
 // Insert: adds the node using separate chaining, rehashed if the max load factor (0.8) is reached
-void HashTable::insert(weatherNode node) {
+void HashTable::insert(const weatherNode& node) {
     int index = hashFunction(node.score);
     // insert value at index, increment num of items
     table[index].push_back(node);
@@ -80,8 +80,9 @@ vector<weatherNode> HashTable::kLargest(int k) {
 
 // Rehash: doubles the table size when the max load factor is reached, and re-inserts every node
 void HashTable::rehash() {
-    vector<vector<weatherNode>> oldTable = table;
     int newSize = static_cast<int>(table.size()) * 2;
+    // move() gives all buckets to oldTable without making a copy, faster
+    vector<vector<weatherNode>> oldTable = move(table);
     table.clear();
     table.resize(newSize);
     numItems = 0;

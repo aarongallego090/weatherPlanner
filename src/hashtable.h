@@ -15,7 +15,7 @@ private:
 
 public:
     HashTable(int startSize = 11);
-    void insert(weatherNode node);
+    void insert(const weatherNode& node);
     vector<weatherNode> search(double score);
     vector<weatherNode> kLargest(int k);
     void clear();
