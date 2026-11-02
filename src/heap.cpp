@@ -53,7 +53,6 @@ void weatherNode::setScoreCompare(){
     compareScore = true;
 }
 
-
 // Private helpers
 void Heap::heapifyDown(int index){
     int size = heap.size();
@@ -84,6 +83,17 @@ void Heap::heapifyUp(int index){
     else return;
 }
 
+// Buildheap
+void Heap::buildHeap(const vector<weatherNode>& nodes) {
+    heap = nodes;
+    int size = heap.size();
+
+    // Heapify down from last non-leaf
+    for (int i = size / 2 - 1; i >= 0; i--) {
+        heapifyDown(i);
+    }
+}
+
 // Modifiers
 void Heap::pop(){
     if (heap.empty()) return;
@@ -95,6 +105,7 @@ void Heap::pop(){
         heapifyDown(0);
     }
 }
+
 void Heap::insert(int d, int hr, int l, double t, double w, double p, int c, double s){
     weatherNode newNode = weatherNode(d, hr, l, t, w, p, c, s);
 

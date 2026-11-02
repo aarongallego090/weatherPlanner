@@ -53,6 +53,10 @@ public:
     // Constructor
     Heap(bool score = false) : compareScore(score) {}
 
+    // BuildHeap
+    void buildHeap(const vector<weatherNode>& nodes);
+
+
     // Modifiers
     void pop();
     void insert(int d, int hr, int l, double t, double w, double p, int c, double s);

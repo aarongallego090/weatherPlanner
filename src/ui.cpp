@@ -78,6 +78,7 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores){
 // Reads every row of the CSV into weather heap
 void readData(Heap& weather, int method){
     ifstream file("projectData.csv");
+    vector<weatherNode> nodes;
 
     if (!file.is_open()) {
         cerr << "Failed to open CSV file" << endl;
@@ -133,11 +134,15 @@ void readData(Heap& weather, int method){
         getline(stream, field, ',');
         cloudCover = stoi(field);
 
-        // Insert
+        // Insert into a vector
         if(method == 0){
-            weather.insert(date, hour, id, temp, wind, precipitation, cloudCover, score);
+            weatherNode newNode = weatherNode(date, hour, id, temp, wind, precipitation, cloudCover, score);
+            nodes.push_back(newNode);
         }
     }
+
+    // Build heap
+    if(method == 0) weather.buildHeap(nodes);
     file.close();
 }
 
