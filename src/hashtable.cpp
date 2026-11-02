@@ -58,17 +58,19 @@ vector<weatherNode> HashTable::kLargest(int k) {
         return result;
     }
     // Walks the keys from the highest score (100) down
-    // Using search to get nodes with each score
+    // Looks directly in each score's bucket, no copy
     double score = 0;
     for (int key = 100; key >= 0; key--) {
         score = key / 10.0;
-        vector<weatherNode> found = search(score);
-        // Get the first k nodes found or fewer
-        for (const auto& node : found) {
-            result.push_back(node);
-            k--;
-            if (k == 0) {
-                return result;
+        int index = hashFunction(score);
+        // Check each node in bucket, add if it has the score
+        for (const auto& node : table[index]) {
+            if (key == getKey(node.score)) {
+                result.push_back(node);
+                k--;
+                if (k == 0) {
+                    return result;
+                }
             }
         }
     }
