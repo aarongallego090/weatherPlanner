@@ -84,7 +84,7 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores){
 // Reads every row of the CSV into weather heap
 void readData(Heap& weather, int method){
     ifstream file("projectData.csv");
-
+    vector<weatherNode> nodes;
     if (!file.is_open()) {
         cerr << "Failed to open CSV file" << endl;
         return;
@@ -139,11 +139,15 @@ void readData(Heap& weather, int method){
         getline(stream, field, ',');
         cloudCover = stoi(field);
 
-        // Insert
+        // Insert into a vector
         if(method == 0){
-            weather.insert(date, hour, id, temp, wind, precipitation, cloudCover, score);
+            weatherNode newNode = weatherNode(date, hour, id, temp, wind, precipitation, cloudCover, score);
+            nodes.push_back(newNode);
         }
     }
+
+    // Build heap
+    if(method == 0) weather.buildHeap(nodes);
     file.close();
 }
 
@@ -160,10 +164,10 @@ void getDay(int& date, int& location, int& activity, int& k){
     cout << "0: Running, 1: Tanning, 2: Swimming, 3: Picnic" << endl;
     cin >> activity;
 
-    cout << "How many hours to show? (1-16)" << endl;
+    cout << "How many hours to show? (1-14)" << endl;
     cin >> k;
-    while (k<1 || k>16) {
-        cout << "Please enter a number from 1 to 16." << endl;
+    while (k<1 || k>14) {
+        cout << "Please enter a number from 1 to 14." << endl;
         cin >> k;
     }
 }
