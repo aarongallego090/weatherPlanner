@@ -8,7 +8,7 @@ void menu(Heap& weather, Heap& scores, HashTable& hashScores);
 //Heap
 void readData(Heap& weather, int method);
 
-void getDay(int& date, int& location, int& activity, int& k);
+bool getDay(int& date, int& location, int& activity, int& k);
 
 vector<weatherNode> getDayNodes(int date, int location, int activity, Heap& weather);
 void fillHeap(const vector<weatherNode>& dayNodes, Heap& scores);

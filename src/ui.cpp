@@ -151,25 +151,39 @@ void readData(Heap& weather, int method){
     file.close();
 }
 
-void getDay(int& date, int& location, int& activity, int& k){
+bool getDay(int& date, int& location, int& activity, int& k){
     cout << "Enter Date: YYYYMMDD" << endl;
-    cin >> date;
+    while (!(cin >> date)){
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Please enter a valid date in YYYYMMDD format." << endl;
+    }
 
     cout << "Choose a city:" << endl;
     cout << "0: Gainesville, 1: Orlando, 2: Tampa, 3: Miami, 4: NYC, 5: DC, 6: Boston" << endl <<
-            "7: Chicago, 8: Houston, 9: Denver, 10: San Francisco, 11: Los Angeles" << endl;
-    cin >> location;
+         "7: Chicago, 8: Houston, 9: Denver, 10: San Francisco, 11: Los Angeles" << endl;
+    while (!(cin >> location) || location < 0 || location > 11) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Enter a number from 0 to 11." << endl;
+    }
 
     cout << "Choose an activity:" << endl;
     cout << "0: Running, 1: Tanning, 2: Swimming, 3: Picnic" << endl;
-    cin >> activity;
+    while (!(cin >> activity) || activity < 0 || activity > 3) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Enter a number from 0 to 3." << endl;
+    }
 
     cout << "How many hours to show? (1-14)" << endl;
-    cin >> k;
-    while (k<1 || k>14) {
+    while (!(cin >> k) || k < 1 || k > 14) {
+        cin.clear();
+        cin.ignore(10000, '\n');
         cout << "Please enter a number from 1 to 14." << endl;
-        cin >> k;
     }
+
+    return true;
 }
 
 // Finds the hours for the chosen date and city, scores them for the activity

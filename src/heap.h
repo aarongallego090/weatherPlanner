@@ -59,13 +59,11 @@ public:
 
     // Modifiers
     void pop();
-    void insert(int d, int hr, int l, double t, double w, double p, int c, double s);
     void insert(weatherNode node);
     void clear();
 
     // Getters
     weatherNode top();
-    Heap kLargest(int k);
     bool empty();
     int size();
 

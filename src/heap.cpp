@@ -106,13 +106,7 @@ void Heap::pop(){
     }
 }
 
-void Heap::insert(int d, int hr, int l, double t, double w, double p, int c, double s){
-    weatherNode newNode = weatherNode(d, hr, l, t, w, p, c, s);
 
-    heap.push_back(newNode);
-
-    heapifyUp(heap.size() - 1);
-}
 void Heap::insert(weatherNode node){
     if(compareScore) node.setScoreCompare();
     heap.push_back(node);
@@ -128,19 +122,6 @@ void Heap::clear() {
 weatherNode Heap::top(){
     return heap[0];
 }
-
-// Returns k largest elts, not functional/needed
-Heap Heap::kLargest(int k){
-    Heap temp = *this;
-    Heap kHeap(true);
-
-    for (int i = 0; i < k && !temp.empty(); i++) {
-        kHeap.insert(temp.top());
-        temp.pop();
-    }
-
-    return kHeap;
-} // Not needed?
 
 bool Heap::empty(){
     return heap.empty();
