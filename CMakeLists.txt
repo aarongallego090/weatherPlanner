@@ -13,6 +13,10 @@ add_executable(weatherPlanner
         src/main.cpp
         src/hashtable.cpp
         src/hashtable.h
+        src/report.cpp
+        src/report.h
+        src/benchmark.cpp
+        src/benchmark.h
 )
 
 configure_file(${CMAKE_SOURCE_DIR}/projectData.csv ${CMAKE_BINARY_DIR}/projectData.csv COPYONLY)
