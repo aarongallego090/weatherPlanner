@@ -15,3 +15,5 @@ void fillHeap(const vector<weatherNode>& dayNodes, Heap& scores);
 void fillHashTable(const vector<weatherNode>& dayNodes, HashTable& hashScores);
 
 void printResult(int rank, const weatherNode& node);
+
+bool isValidDate(int date);

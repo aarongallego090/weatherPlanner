@@ -153,7 +153,7 @@ void readData(Heap& weather, int method){
 
 bool getDay(int& date, int& location, int& activity, int& k){
     cout << "Enter Date: YYYYMMDD" << endl;
-    while (!(cin >> date)){
+    while (!(cin >> date) || !isValidDate(date)){
         cin.clear();
         cin.ignore(10000, '\n');
         cout << "Please enter a valid date in YYYYMMDD format." << endl;
@@ -231,4 +231,18 @@ void printResult(int rank, const weatherNode& node) {
         cout << "rain)";
     }
     cout << endl;
+}
+
+bool isValidDate(int date) {
+    int year  = date / 10000;
+    int month = (date / 100) % 100;
+    int day   = date % 100;
+
+    if (year != 2025 && year != 2026) return false;
+    if (month < 1 || month > 12) return false;
+    if (day < 1) return false;
+
+    int days[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+
+    return day <= days[month - 1];
 }
