@@ -94,20 +94,19 @@ void runBenchmark(Heap& weather) {
         cin >> activity;
     }
 
-    cout << "How Many Hours to Show? (1-16)" << endl;
+    cout << "How Many Hours to Show? (1-14)" << endl;
     cin >> k;
-    while (k < 1 || k > 16) {
-        cout << "Please Enter a Number From 1 to 16." << endl;
+    while (k < 1 || k > 14) {
+        cout << "Please Enter a Number From 1 to 14." << endl;
         cin >> k;
     }
 
-    // Collect scored hours (6:00 to 19:00) for all 12 cities, grouped by time span
+    // Collect scored hours (all 24 hours) for all 12 cities, grouped by time span
     vector<weatherNode> all = getAllNodes(weather);
     vector<weatherNode> dayNodes, weekNodes, monthNodes, yearNodes;
     long startDay = dayNumber(date);
 
     for (weatherNode node : all) {
-        if (node.hour < 6 || node.hour > 19) continue;
         node.score = 0;
         node.calculateScore(activity);
 
