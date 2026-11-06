@@ -21,31 +21,27 @@ int rangeScore(double value, double idealLow, double idealHigh, int maxPoints) {
 void weatherNode::calculateScore(int activity){
     // Score for running
     if(activity == 0){
-        score += rangeScore(temp, 18, 26, 5);
+        score += rangeScore(temp, 18, 26, 6);
         score += rangeScore(wind, 0, 10, 2);
-        if(precip == 0)
-            score += 2;
+        score += rangeScore(precip, 0, 0, 2);
     }
     // Score for tanning
     if(activity == 1){
         score += rangeScore(temp, 25, 32, 2);
-        if(precip == 0)
-            score += 5;
+        score += rangeScore(precip, 0, 0, 5);
         score += rangeScore(cloudCover, 0, 25, 3);
     }
     // Score for swimming
     if(activity == 2){
-        score += rangeScore(temp, 25, 37, 3);
-        if(precip == 0)
-            score += 2;
-        score += rangeScore(cloudCover, 0, 25, 4);
+        score += rangeScore(temp, 25, 37, 6);
+        score += rangeScore(precip, 0, 0, 2);
+        score += rangeScore(cloudCover, 0, 25, 2);
     }
     // Score for picnic
     if(activity == 3){
         score += rangeScore(temp, 21, 29, 3);
         score += rangeScore(wind, 0, 5, 4);
-        if(precip == 0)
-            score += 2;
+        score += rangeScore(precip, 0, 0, 2);
         score += rangeScore(cloudCover, 0, 50, 1);
     }
 }
@@ -125,7 +121,4 @@ weatherNode Heap::top(){
 
 bool Heap::empty(){
     return heap.empty();
-}
-int Heap::size(){
-    return heap.size();
 }

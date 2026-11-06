@@ -65,6 +65,4 @@ public:
     // Getters
     weatherNode top();
     bool empty();
-    int size();
-
 };
